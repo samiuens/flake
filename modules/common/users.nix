@@ -55,8 +55,7 @@ in
 
     home-manager.users = lib.mapAttrs (name: user: {
       imports =
-        lib.optional (user ? hmConfig) user.hmConfig
-        ++ lib.optional (user ? groupModule) user.groupModule;
+        lib.optional (user ? hmConfig) user.hmConfig ++ lib.optional (user ? groupModule) user.groupModule;
 
       home = {
         username = name;

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.smi.services.warp.autoConnect = lib.mkEnableOption "Cloudflare WARP auto-connect on login";
 

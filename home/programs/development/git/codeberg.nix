@@ -21,7 +21,11 @@ in
     smi.programs.ssh.providers.codeberg = {
       enable = true;
       username = cfg.username;
-      insteadOf = [ "https://codeberg.org/" "cb:" ] ++ cfg.insteadOf;
+      insteadOf = [
+        "https://codeberg.org/"
+        "cb:"
+      ]
+      ++ cfg.insteadOf;
     };
   };
 }

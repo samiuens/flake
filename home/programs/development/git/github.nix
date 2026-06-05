@@ -21,7 +21,11 @@ in
     smi.programs.ssh.providers.github = {
       enable = true;
       username = cfg.username;
-      insteadOf = [ "https://github.com/" "gh:" ] ++ cfg.insteadOf;
+      insteadOf = [
+        "https://github.com/"
+        "gh:"
+      ]
+      ++ cfg.insteadOf;
     };
   };
 }

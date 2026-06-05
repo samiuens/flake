@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.smi.hardware.gpu = lib.mkOption {
     type = lib.types.enum [

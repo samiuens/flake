@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   options.smi.services.warp.enable = lib.mkEnableOption "Cloudflare WARP";
 

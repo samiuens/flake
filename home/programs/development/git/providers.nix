@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.smi.programs.ssh;
   home = config.home.homeDirectory;
@@ -41,7 +46,8 @@ let
 
   enabledProviders = lib.filterAttrs (_: p: p.enable) cfg.providers;
 
-  keyName = provider: sname:
+  keyName =
+    provider: sname:
     if provider.username != "" then "id-ed25519-${provider.username}" else "id-ed25519-${sname}";
 in
 {
@@ -63,8 +69,12 @@ in
           if [ ! -f "$keyfile" ]; then
             $DRY_RUN_CMD mkdir -p -m 700 "$(dirname "$keyfile")"
             ${lib.optionalString (provider.comment != "") ''comment="${provider.comment}"''}
-            ${lib.optionalString (provider.comment == "" && provider.username != "") ''comment="${provider.username}@${provider.host}"''}
-            ${lib.optionalString (provider.comment == "" && provider.username == "") ''comment="${sname}@$(hostname)"''}
+            ${lib.optionalString (
+              provider.comment == "" && provider.username != ""
+            ) ''comment="${provider.username}@${provider.host}"''}
+            ${lib.optionalString (
+              provider.comment == "" && provider.username == ""
+            ) ''comment="${sname}@$(hostname)"''}
             $DRY_RUN_CMD ${pkgs.openssh}/bin/ssh-keygen \
               -t ed25519 \
               -f "$keyfile" \
@@ -87,7 +97,8 @@ in
     ) enabledProviders;
 
     programs.git.settings = lib.mkMerge (
-      lib.mapAttrsToList (_: provider:
+      lib.mapAttrsToList (
+        _: provider:
         lib.mkIf (provider.insteadOf != [ ]) {
           url."git@${provider.host}:" = {
             insteadOf = provider.insteadOf;
