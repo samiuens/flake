@@ -1,0 +1,78 @@
+/*
+ * userChrome.css für Zen Browser, generiert durch Noctalia's
+ * Template-Processor aus der aktuellen Material-You-Palette.
+ *
+ * Quelle: home/desktop/hyprland/noctalia/templates/zen.css
+ * Ziel:   ~/.zen/default/chrome/userChrome.css
+ *
+ * Vorbedingung in about:config (deklarativ in zen.nix gesetzt):
+ *   toolkit.legacyUserProfileCustomizations.stylesheets = true
+ *
+ * Änderungen wirken erst nach Browser-Restart — Firefox/Zen laden
+ * userChrome.css nur beim Profil-Start.
+ */
+
+:root {
+  /* Zen-eigene Theme-Custom-Properties */
+  --zen-colors-primary: {{colors.primary.default.hex}} !important;
+  --zen-colors-secondary: {{colors.secondary.default.hex}} !important;
+  --zen-colors-tertiary: {{colors.tertiary.default.hex}} !important;
+  --zen-colors-tertiary-hover: {{colors.tertiary_container.default.hex}} !important;
+  --zen-colors-border: {{colors.outline.default.hex}} !important;
+
+  --zen-main-browser-background: {{colors.surface.default.hex}} !important;
+  --zen-themed-toolbar-bg: {{colors.surface_container.default.hex}} !important;
+  --zen-themed-toolbar-bg-transparent: {{colors.surface_container.default.hex}} !important;
+  --zen-toolbar-element-bg: {{colors.surface_container_high.default.hex}} !important;
+  --zen-element-color: {{colors.on_surface.default.hex}} !important;
+
+  /* Firefox-Toolkit-Variablen (fallback wenn Zen-Vars nicht greifen) */
+  --toolbar-bgcolor: {{colors.surface_container.default.hex}} !important;
+  --toolbar-color: {{colors.on_surface.default.hex}} !important;
+  --tab-selected-bgcolor: {{colors.surface.default.hex}} !important;
+  --tab-selected-textcolor: {{colors.on_surface.default.hex}} !important;
+  --tabs-border-color: {{colors.outline_variant.default.hex}} !important;
+  --urlbar-box-bgcolor: {{colors.surface_container_high.default.hex}} !important;
+  --urlbar-box-focused-bgcolor: {{colors.surface_container_highest.default.hex}} !important;
+}
+
+/* Sidebar/Tabs-Container in Zens Compact-Layout */
+#TabsToolbar,
+#sidebar-box,
+#zen-sidebar-bottom-buttons,
+#zen-tabs-wrapper {
+  background-color: {{colors.surface_container_low.default.hex}} !important;
+  color: {{colors.on_surface.default.hex}} !important;
+}
+
+/* URL-Bar */
+#urlbar,
+#urlbar-background {
+  background-color: {{colors.surface_container_high.default.hex}} !important;
+  color: {{colors.on_surface.default.hex}} !important;
+  border-color: {{colors.outline.default.hex}} !important;
+}
+
+/* Nav-Bar */
+#nav-bar {
+  background-color: {{colors.surface_container.default.hex}} !important;
+  color: {{colors.on_surface.default.hex}} !important;
+}
+
+/* Aktiver Tab */
+.tab-background[selected="true"] {
+  background-color: {{colors.secondary_container.default.hex}} !important;
+}
+
+.tabbrowser-tab[selected="true"] .tab-text {
+  color: {{colors.on_secondary_container.default.hex}} !important;
+}
+
+/* Inaktive Tabs */
+.tab-background:not([selected="true"]) {
+  background-color: transparent !important;
+}
+
+.tabbrowser-tab .tab-text {
+  color: {{colors.on_surface_variant.default.hex}} !important;
+}
