@@ -7,7 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  auto-fix:
+    name: Auto-fix
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,20 +23,34 @@ jobs:
       - name: Install Nix tools
         run: nix profile install nixpkgs#nixfmt nixpkgs#statix nixpkgs#deadnix
 
-      - name: Auto-fix formatting and linting
+      - name: Fix formatting and linting
         run: |
           git ls-files '*.nix' | xargs nixfmt
           statix fix .
           git ls-files '*.nix' | xargs deadnix --edit
           git ls-files '*.nix' | xargs nixfmt
 
-      - name: Commit and push auto-fixes
+      - name: Commit and push
         if: github.event_name == 'push'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -u
           git diff --cached --quiet || (git commit -m "🎨 style: auto-fix formatting and linting" && git push)
+
+  check:
+    name: Flake check
+    needs: auto-fix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
 
       - name: nix flake check
         run: nix flake check
