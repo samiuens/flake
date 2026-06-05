@@ -53,7 +53,7 @@ in
   config = lib.mkIf (cfg.enable && config.smi.desktop.enable) {
     fonts = {
       fontDir.enable = true;
-      packages = cfg.packages;
+      inherit (cfg) packages;
       fontconfig.defaultFonts.emoji = [ cfg.defaultEmoji ];
     };
   };

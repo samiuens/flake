@@ -14,7 +14,7 @@ let
 in
 {
   options.smi.desktop.noctalia.settings = lib.mkOption {
-    type = (pkgs.formats.json { }).type;
+    inherit ((pkgs.formats.json { })) type;
     default = { };
     description = "Noctalia shell settings";
   };

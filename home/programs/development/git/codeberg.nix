@@ -20,7 +20,7 @@ in
   config = lib.mkIf cfg.enable {
     smi.programs.ssh.providers.codeberg = {
       enable = true;
-      username = cfg.username;
+      inherit (cfg) username;
       insteadOf = [
         "https://codeberg.org/"
         "cb:"

@@ -20,7 +20,7 @@ in
   config = lib.mkIf cfg.enable {
     smi.programs.ssh.providers.gitlab = {
       enable = true;
-      username = cfg.username;
+      inherit (cfg) username;
       insteadOf = [
         "https://gitlab.com/"
         "gl:"

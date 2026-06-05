@@ -101,7 +101,7 @@ in
         _: provider:
         lib.mkIf (provider.insteadOf != [ ]) {
           url."git@${provider.host}:" = {
-            insteadOf = provider.insteadOf;
+            inherit (provider) insteadOf;
           };
         }
       ) enabledProviders
