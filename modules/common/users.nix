@@ -40,7 +40,7 @@ in
   };
 
   config = {
-    users.users = lib.mapAttrs (name: user: {
+    users.users = lib.mapAttrs (_name: user: {
       isNormalUser = true;
       shell = cfg.defaultShell;
       inherit (user) description;

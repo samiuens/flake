@@ -42,11 +42,10 @@
 
   outputs =
     {
-      self,
       nixpkgs,
       git-hooks,
       ...
-    }@inputs:
+    }:
     let
       systems = [
         "x86_64-linux"
