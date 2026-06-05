@@ -21,7 +21,7 @@ in
     smi.programs.ssh.providers.gitlab = {
       enable = true;
       username = cfg.username;
-      insteadOf = [ "https://gitlab.com/" "gl:/" ] ++ cfg.insteadOf;
+      insteadOf = [ "https://gitlab.com/" "gl:" ] ++ cfg.insteadOf;
     };
   };
 }
