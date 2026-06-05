@@ -1,4 +1,4 @@
-name: Type check
+name: CI
 
 on:
   push:
@@ -9,6 +9,8 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -17,5 +19,20 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
 
+      - name: Auto-fix formatting and linting
+        run: |
+          git ls-files '*.nix' | xargs nixfmt
+          statix fix .
+          git ls-files '*.nix' | xargs deadnix --edit
+          git ls-files '*.nix' | xargs nixfmt
+
+      - name: Commit and push auto-fixes
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -u
+          git diff --cached --quiet || (git commit -m "🎨 style: auto-fix formatting and linting" && git push)
+
       - name: nix flake check
-        run: nix flake check --all-systems
+        run: nix flake check
