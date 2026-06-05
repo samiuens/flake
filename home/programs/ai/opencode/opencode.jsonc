@@ -1,0 +1,38 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // General settings
+  "model": "anthropic/claude-sonnet-4-6",
+  "plugin": ["opencode-claude-auth@latest", "oh-my-openagent@latest"],
+  "autoupdate": true,
+
+  // Permission settings
+  "permission": {
+    "bash": {
+      "ls *": "allow",
+      "find *": "allow",
+      "grep *": "allow",
+      "cat *": "allow",
+      "gh *": "allow",
+      //"*": "ask"
+    },
+    "codesearch": "allow",
+    "edit": "allow",
+    "grep": "allow",
+    "glob": "allow",
+    "doom_loop": "ask",
+    "external_directory": "deny",
+    "list": "allow",
+    "lsp": "allow",
+    "question": "allow",
+    "read": "allow",
+    "skill": "allow",
+    "task": "allow",
+    "todoread": "allow",
+    "todowrite": "allow",
+    "webfetch": "ask",
+    "websearch": "ask",
+
+    // Deny env files
+    "*.env": "deny",
+  },
+}
