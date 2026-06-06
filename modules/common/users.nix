@@ -45,7 +45,7 @@ in
       home = {
         username = name;
         homeDirectory = "/home/${name}";
-        stateVersion = cfg.stateVersion;
+        inherit (cfg) stateVersion;
         packages = (user.packages or (_: [ ])) pkgs;
       };
     }) userRegistry;

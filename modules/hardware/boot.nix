@@ -32,7 +32,7 @@ in
 
     boot.loader.limine = {
       enable = true;
-      secureBoot.enable = lib.mkIf cfg.secureBoot true;
+      secureBoot.enable = cfg.secureBoot;
       inherit (cfg) maxGenerations;
       extraEntries = lib.mkIf (cfg.windowsEfiUuid != null) ''
         /Windows
