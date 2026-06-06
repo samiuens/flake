@@ -22,20 +22,6 @@ in
       default = cfg.defaultLocale;
       description = "Extra system locale";
     };
-
-    keyboard = {
-      layout = lib.mkOption {
-        type = lib.types.str;
-        default = "de";
-        description = "Keyboard layout";
-      };
-
-      variant = lib.mkOption {
-        type = lib.types.str;
-        default = "";
-        description = "Keyboard variant";
-      };
-    };
   };
 
   config = {
@@ -54,12 +40,5 @@ in
       "LC_TELEPHONE"
       "LC_TIME"
     ] (_: cfg.extraLocale);
-
-    services.xserver.xkb = {
-      inherit (cfg.keyboard) layout;
-      inherit (cfg.keyboard) variant;
-    };
-
-    console.keyMap = cfg.keyboard.layout;
   };
 }

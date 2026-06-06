@@ -39,8 +39,8 @@
             # kwin liest das Keyboard-Layout aus libxkbcommon-Env, nicht
             # aus /etc/X11/xorg.conf.d, daher hier explizit setzen.
             General.GreeterEnvironment = lib.concatStringsSep "," [
-              "XKB_DEFAULT_LAYOUT=${config.smi.locale.keyboard.layout}"
-              "XKB_DEFAULT_VARIANT=${config.smi.locale.keyboard.variant}"
+              "XKB_DEFAULT_LAYOUT=${config.smi.keyboard.layout}"
+              "XKB_DEFAULT_VARIANT=${config.smi.keyboard.variant}"
             ];
           };
         };

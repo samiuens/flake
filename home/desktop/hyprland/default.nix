@@ -9,7 +9,7 @@ let
   active = osConfig.smi.desktop.enable && osConfig.smi.desktop.environment == "hyprland";
   noctaliaActive = active && osConfig.smi.desktop.shell == "noctalia";
   cursorSize = toString config.smi.desktop.cursor.size;
-  kbLayout = osConfig.smi.locale.keyboard.layout;
+  kbLayout = osConfig.smi.keyboard.layout;
 
   workspaceBinds = builtins.concatStringsSep "\n        " (
     builtins.concatMap (i: [
