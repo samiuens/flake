@@ -14,16 +14,19 @@ let
   kb = config.smi.keyboard;
 
   greeterCompositorConfig = ''
-    hl.config({
-      input = {
-        kb_layout = "${kb.layout}",
-        kb_variant = "${kb.variant}",
-      },
-    })
+    input {
+      kb_layout = ${kb.layout}
+      kb_variant = ${kb.variant}
+    }
 
-    hl.env("XCURSOR_THEME", "Adwaita")
-    hl.env("XCURSOR_SIZE", "24")
-    hl.env("XCURSOR_PATH", "${pkgs.adwaita-icon-theme}/share/icons")
+    misc {
+      disable_hyprland_logo = true
+      disable_splash_rendering = true
+    }
+
+    env = XCURSOR_THEME,Adwaita
+    env = XCURSOR_SIZE,24
+    env = XCURSOR_PATH,${pkgs.adwaita-icon-theme}/share/icons
   '';
 in
 {
