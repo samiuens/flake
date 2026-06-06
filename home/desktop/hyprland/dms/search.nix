@@ -1,7 +1,6 @@
 {
   osConfig,
   lib,
-  pkgs,
   inputs,
   ...
 }:
@@ -13,12 +12,8 @@ let
 in
 {
   imports = [
-    inputs.dms.homeModules.default
-    ./shell.nix
-    ./theming.nix
-    ./keybinds.nix
-    ./search.nix
+    inputs.danksearch.homeModules.dsearch
   ];
 
-  home.packages = lib.mkIf active [ pkgs.xdg-desktop-portal-gtk ];
+  programs.dsearch.enable = lib.mkIf active true;
 }
