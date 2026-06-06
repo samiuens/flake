@@ -19,10 +19,7 @@
     services = {
       gvfs.enable = true;
       udisks2.enable = true;
-      displayManager.gdm = {
-        enable = true;
-        wayland = true;
-      };
+      displayManager.gdm.enable = true;
     };
 
     xdg.portal = {
