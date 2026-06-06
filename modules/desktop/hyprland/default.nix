@@ -10,16 +10,40 @@
   ];
 
   config = lib.mkIf (config.smi.desktop.enable && config.smi.desktop.environment == "hyprland") {
-    programs.hyprland.enable = true;
+    programs.hyprland = {
+      enable = true;
+      withUWSM = false;
+    };
     security.polkit.enable = true;
     documentation.nixos.enable = false;
 
     services = {
       gvfs.enable = true;
       udisks2.enable = true;
-      displayManager.sddm = {
-        enable = true;
-        wayland.enable = true;
+      displayManager = {
+        defaultSession = "hyprland";
+        sddm = {
+          enable = true;
+          theme = "elarun";
+          wayland = {
+            enable = true;
+            # weston-kiosk (Default) hat keinen Cursor und keine Layer-
+            # Shell — kwin rendert beides nativ.
+            compositor = "kwin";
+          };
+          settings = {
+            Theme = {
+              CursorTheme = "Adwaita";
+              CursorSize = "24";
+            };
+            # kwin liest das Keyboard-Layout aus libxkbcommon-Env, nicht
+            # aus /etc/X11/xorg.conf.d, daher hier explizit setzen.
+            General.GreeterEnvironment = lib.concatStringsSep "," [
+              "XKB_DEFAULT_LAYOUT=${config.smi.locale.keyboard.layout}"
+              "XKB_DEFAULT_VARIANT=${config.smi.locale.keyboard.variant}"
+            ];
+          };
+        };
       };
     };
 
@@ -50,6 +74,7 @@
       gnome-text-editor
       papers
       loupe
+      adwaita-icon-theme # liefert den Adwaita-Cursor system-weit (SDDM/Greeter)
     ];
 
     environment.sessionVariables = {
