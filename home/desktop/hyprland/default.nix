@@ -8,6 +8,7 @@
 let
   active = osConfig.smi.desktop.enable && osConfig.smi.desktop.environment == "hyprland";
   noctaliaActive = active && osConfig.smi.desktop.shell == "noctalia";
+  dmsActive = active && osConfig.smi.desktop.shell == "dms";
   cursorSize = toString config.smi.desktop.cursor.size;
   kbLayout = osConfig.smi.keyboard.layout;
 
@@ -19,7 +20,10 @@ let
   );
 in
 {
-  imports = [ ./noctalia ];
+  imports = [
+    ./noctalia
+    ./dms
+  ];
 
   config = lib.mkIf active {
     wayland.windowManager.hyprland = {
@@ -82,6 +86,7 @@ in
         hl.on("hyprland.start", function ()
           hl.exec_cmd("${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1")
           ${lib.optionalString noctaliaActive ''hl.exec_cmd("noctalia-shell -d")''}
+          ${lib.optionalString dmsActive ''hl.exec_cmd("dms run")''}
         end)
 
         -- App / window
