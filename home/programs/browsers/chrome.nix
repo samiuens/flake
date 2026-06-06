@@ -4,13 +4,8 @@
   pkgs,
   ...
 }:
-let
+(import ../../../lib { inherit lib; }).mkSimpleProgram {
+  inherit config lib;
   name = "chrome";
-in
-{
-  options.smi.programs.${name}.enable = lib.mkEnableOption name;
-
-  config = lib.mkIf config.smi.programs.${name}.enable {
-    home.packages = with pkgs; [ google-chrome ];
-  };
+  packages = [ pkgs.google-chrome ];
 }

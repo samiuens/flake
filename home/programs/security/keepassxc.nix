@@ -1,16 +1,11 @@
 {
   config,
-  pkgs,
   lib,
+  pkgs,
   ...
 }:
-let
+(import ../../../lib { inherit lib; }).mkSimpleProgram {
+  inherit config lib;
   name = "keepassxc";
-in
-{
-  options.smi.programs.${name}.enable = lib.mkEnableOption name;
-
-  config = lib.mkIf config.smi.programs.${name}.enable {
-    home.packages = with pkgs; [ keepassxc ];
-  };
+  packages = [ pkgs.keepassxc ];
 }
