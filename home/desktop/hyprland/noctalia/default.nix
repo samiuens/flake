@@ -91,10 +91,6 @@ in
     zed-editor.userSettings.theme = lib.mkForce "Noctalia";
   };
 
-  wayland.windowManager.hyprland.extraConfig = lib.mkIf active ''
-    source = ~/.config/hypr/noctalia-colors.conf
-  '';
-
   xdg.configFile."qt6ct/qt6ct.conf" = lib.mkIf active {
     text = ''
       [Appearance]
@@ -128,48 +124,50 @@ in
     icon-theme = "Adwaita";
   };
 
-  wayland.windowManager.hyprland.settings = lib.mkIf active {
-    general = {
-      gaps_in = lib.mkForce 10;
-      gaps_out = lib.mkForce 15;
-    };
+  wayland.windowManager.hyprland.extraConfig = lib.mkIf active ''
+    -- Farben von noctalia (~/.config/hypr/hyprland/colors.lua)
+    pcall(require, "hyprland/colors")
 
-    decoration = {
-      rounding = lib.mkForce 15;
-      rounding_power = 2;
-      shadow = {
-        range = lib.mkForce 4;
-        color = lib.mkForce "rgba(1a1a1aee)";
-      };
-      blur = {
-        size = lib.mkForce 3;
-        vibrancy = 0.1696;
-      };
-    };
+    -- Noctalia overrides
+    hl.config({
+      general = {
+        gaps_in = 10,
+        gaps_out = 15,
+      },
+      decoration = {
+        rounding = 15,
+        rounding_power = 2,
+        shadow = {
+          range = 4,
+          color = "rgba(1a1a1aee)",
+        },
+        blur = {
+          size = 3,
+          vibrancy = 0.1696,
+        },
+      },
+    })
 
-    layerrule = {
-      name = "noctalia";
-      "match:namespace" = "noctalia-background-.*$";
-      ignore_alpha = 0.5;
-      blur = true;
-      blur_popups = true;
-    };
+    -- Layer rule for noctalia background
+    hl.layer_rule({
+      name         = "noctalia",
+      match        = { namespace = "noctalia-background-.*" },
+      ignore_alpha = 0.5,
+      blur         = true,
+      blur_popups  = true,
+    })
 
-    "$ipc" = "noctalia-shell ipc call";
-    bind = [
-      "$mod, SPACE, exec, $ipc launcher toggle"
-      "$mod, S, exec, $ipc controlCenter toggle"
-      "$mod, comma, exec, $ipc settings toggle"
-      "$mod, P, exec, $ipc lockScreen lock"
-    ];
-    bindel = [
-      ", XF86AudioRaiseVolume, exec, $ipc volume increase"
-      ", XF86AudioLowerVolume, exec, $ipc volume decrease"
-      ", XF86MonBrightnessUp,  exec, $ipc brightness increase"
-      ", XF86MonBrightnessDown, exec, $ipc brightness decrease"
-    ];
-    bindl = [
-      ", XF86AudioMute, exec, $ipc volume muteOutput"
-    ];
-  };
+    -- Noctalia IPC
+    hl.bind("SUPER + SPACE", hl.dsp.exec_cmd("noctalia-shell ipc call launcher toggle"))
+    hl.bind("SUPER + S",     hl.dsp.exec_cmd("noctalia-shell ipc call controlCenter toggle"))
+    hl.bind("SUPER + comma", hl.dsp.exec_cmd("noctalia-shell ipc call settings toggle"))
+    hl.bind("SUPER + P",     hl.dsp.exec_cmd("noctalia-shell ipc call lockScreen lock"))
+
+    -- Audio / brightness (repeat + works when locked)
+    hl.bind("XF86AudioRaiseVolume",  hl.dsp.exec_cmd("noctalia-shell ipc call volume increase"),     { repeating = true, locked = true })
+    hl.bind("XF86AudioLowerVolume",  hl.dsp.exec_cmd("noctalia-shell ipc call volume decrease"),     { repeating = true, locked = true })
+    hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("noctalia-shell ipc call brightness increase"), { repeating = true, locked = true })
+    hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("noctalia-shell ipc call brightness decrease"), { repeating = true, locked = true })
+    hl.bind("XF86AudioMute",         hl.dsp.exec_cmd("noctalia-shell ipc call volume muteOutput"),   { locked = true })
+  '';
 }
