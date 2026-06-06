@@ -7,6 +7,7 @@
 {
   imports = [
     ./noctalia
+    ./dms
   ];
 
   config = lib.mkIf (config.smi.desktop.enable && config.smi.desktop.environment == "hyprland") {
@@ -20,29 +21,30 @@
     services = {
       gvfs.enable = true;
       udisks2.enable = true;
-      displayManager = {
-        defaultSession = "hyprland";
-        sddm = {
+    };
+
+    services.displayManager = lib.mkIf (config.smi.desktop.shell != "dms") {
+      defaultSession = "hyprland";
+      sddm = {
+        enable = true;
+        theme = "elarun";
+        wayland = {
           enable = true;
-          theme = "elarun";
-          wayland = {
-            enable = true;
-            # weston-kiosk (Default) hat keinen Cursor und keine Layer-
-            # Shell — kwin rendert beides nativ.
-            compositor = "kwin";
+          # weston-kiosk (Default) hat keinen Cursor und keine Layer-
+          # Shell — kwin rendert beides nativ.
+          compositor = "kwin";
+        };
+        settings = {
+          Theme = {
+            CursorTheme = "Adwaita";
+            CursorSize = "24";
           };
-          settings = {
-            Theme = {
-              CursorTheme = "Adwaita";
-              CursorSize = "24";
-            };
-            # kwin liest das Keyboard-Layout aus libxkbcommon-Env, nicht
-            # aus /etc/X11/xorg.conf.d, daher hier explizit setzen.
-            General.GreeterEnvironment = lib.concatStringsSep "," [
-              "XKB_DEFAULT_LAYOUT=${config.smi.keyboard.layout}"
-              "XKB_DEFAULT_VARIANT=${config.smi.keyboard.variant}"
-            ];
-          };
+          # kwin liest das Keyboard-Layout aus libxkbcommon-Env, nicht
+          # aus /etc/X11/xorg.conf.d, daher hier explizit setzen.
+          General.GreeterEnvironment = lib.concatStringsSep "," [
+            "XKB_DEFAULT_LAYOUT=${config.smi.keyboard.layout}"
+            "XKB_DEFAULT_VARIANT=${config.smi.keyboard.variant}"
+          ];
         };
       };
     };
