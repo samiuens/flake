@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    ./noctalia.nix
+    ./noctalia
   ];
 
   config = lib.mkIf (config.smi.desktop.enable && config.smi.desktop.environment == "hyprland") {
