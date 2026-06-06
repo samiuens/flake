@@ -5,11 +5,40 @@
 }:
 let
   name = "zed";
+  cfg = config.smi.programs.${name};
 in
 {
-  options.smi.programs.${name}.enable = lib.mkEnableOption name;
+  options.smi.programs.${name} = {
+    enable = lib.mkEnableOption name;
 
-  config = lib.mkIf config.smi.programs.${name}.enable {
+    bufferFont = {
+      family = lib.mkOption {
+        type = lib.types.str;
+        default = "JetBrains Mono";
+        description = "Editor buffer font family";
+      };
+      size = lib.mkOption {
+        type = lib.types.int;
+        default = 16;
+        description = "Editor buffer font size";
+      };
+    };
+
+    terminal = {
+      fontFamily = lib.mkOption {
+        type = lib.types.str;
+        default = "JetBrainsMono Nerd Font";
+        description = "Integrated terminal font family";
+      };
+      fontSize = lib.mkOption {
+        type = lib.types.int;
+        default = 14;
+        description = "Integrated terminal font size";
+      };
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
     programs.zed-editor = {
       enable = true;
       extensions = [
@@ -17,31 +46,25 @@ in
         "nix"
       ];
       userSettings = {
-        # Visuals
         icon_theme = "Material Icon Theme";
         ui_font_family = ".ZedSans";
         ui_font_size = 16;
 
-        # Editor
         autosave = "on_focus_change";
         cursor_shape = "block";
-        buffer_font_family = "JetBrains Mono";
-        buffer_font_size = 16;
+        buffer_font_family = cfg.bufferFont.family;
+        buffer_font_size = cfg.bufferFont.size;
 
-        # Terminal
         terminal = {
-          font_family = "JetBrainsMono Nerd Font";
-          font_size = 14;
+          font_family = cfg.terminal.fontFamily;
+          font_size = cfg.terminal.fontSize;
         };
 
-        # AI
         features.copilot = false;
         disable_ai = true;
 
-        # Telemetry
         telemetry.metrics = false;
 
-        # Nix LSP via devShell + direnv
         load_direnv = "shell_hook";
         lsp.nixd.binary.path = "nixd";
         languages.Nix = {

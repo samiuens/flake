@@ -26,6 +26,12 @@ in
       default = true;
       description = "Enable the Starship prompt";
     };
+
+    tmux.accentColor = lib.mkOption {
+      type = lib.types.str;
+      default = "green";
+      description = "Tmux status bar and border accent color";
+    };
   };
 
   config = {
@@ -41,7 +47,6 @@ in
         interactiveShellInit = ''
           set -g fish_greeting ""
 
-          # Tmux auto-attach: neue Session falls keine existiert, sonst attach
           if status is-interactive && not set -q TMUX
             exec tmux new-session -A -s main
           end
@@ -97,36 +102,29 @@ in
         extraConfig = ''
           setw -g pane-base-index 1
 
-          # Fenster und Panes mit aktuellem Pfad öffnen
           bind c new-window -c "#{pane_current_path}"
           bind % split-window -h -c "#{pane_current_path}"
           bind '"' split-window -v -c "#{pane_current_path}"
 
-          # Intuitivere Split-Shortcuts (| = vertikal, - = horizontal)
           bind | split-window -h -c "#{pane_current_path}"
           bind - split-window -v -c "#{pane_current_path}"
 
-          # Pane-Navigation mit vim-Tasten (mit Prefix)
           bind h select-pane -L
           bind j select-pane -D
           bind k select-pane -U
           bind l select-pane -R
 
-          # Pane-Navigation mit Alt+Pfeiltasten (ohne Prefix)
           bind -n M-Left select-pane -L
           bind -n M-Right select-pane -R
           bind -n M-Up select-pane -U
           bind -n M-Down select-pane -D
 
-          # Automatisches Umbenennen von Fenstern verhindern
           set-option -g allow-rename off
 
-          # Bell-/Aktivitätsbenachrichtigungen deaktivieren
           set -g visual-activity off
           set -g visual-bell off
           set -g bell-action none
 
-          # Status Bar
           set -g status-position bottom
           set -g status-interval 1
           set -g status-left "#{pane_title} "
@@ -134,18 +132,15 @@ in
           set -g status-right "#{host}"
           set -g status-right-length 50
 
-          # Theme (TmuxAI)
-          set -g status-style bg=black,fg=green
+          set -g status-style bg=black,fg=${cfg.tmux.accentColor}
           set -g pane-border-style fg=colour237
-          set -g pane-active-border-style fg=green
-          set -g message-style bg=black,fg=green
+          set -g pane-active-border-style fg=${cfg.tmux.accentColor}
+          set -g message-style bg=black,fg=${cfg.tmux.accentColor}
           setw -g window-status-format "#[fg=colour237,bg=black]#[fg=white,bg=colour237] #I #[fg=white,bg=colour237] #W #[fg=colour237,bg=black]"
-          setw -g window-status-current-format "#[fg=black,bg=green]#[fg=black,bg=green] #I #[fg=black,bg=green,bold] #W #[fg=green,bg=black]"
+          setw -g window-status-current-format "#[fg=black,bg=${cfg.tmux.accentColor}]#[fg=black,bg=${cfg.tmux.accentColor}] #I #[fg=black,bg=${cfg.tmux.accentColor},bold] #W #[fg=${cfg.tmux.accentColor},bg=black]"
 
-          # True-Color-Support
           set -as terminal-features ",xterm-256color:RGB"
 
-          # Continuum: automatisch speichern und nach Reboot wiederherstellen.
           set -g @continuum-restore 'on'
           set -g @continuum-save-interval '1'
         '';

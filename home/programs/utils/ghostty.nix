@@ -6,6 +6,18 @@ in
 {
   options.smi.programs.${name} = {
     enable = lib.mkEnableOption name;
+
+    fontFamily = lib.mkOption {
+      type = lib.types.str;
+      default = "JetBrainsMono Nerd Font Mono";
+      description = "Font family for Ghostty";
+    };
+
+    fontSize = lib.mkOption {
+      type = lib.types.int;
+      default = 12;
+      description = "Font size for Ghostty";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -14,8 +26,8 @@ in
       enableFishIntegration = true;
 
       settings = {
-        font-family = "JetBrainsMono Nerd Font Mono";
-        font-size = 12;
+        font-family = cfg.fontFamily;
+        font-size = cfg.fontSize;
         window-decoration = "auto";
         cursor-style = "block";
         cursor-style-blink = false;

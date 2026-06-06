@@ -58,7 +58,7 @@ in
         };
 
         input = {
-          kb_layout = "de";
+          kb_layout = osConfig.smi.locale.keyboard.layout;
           follow_mouse = 2;
           touchpad.natural_scroll = true;
         };

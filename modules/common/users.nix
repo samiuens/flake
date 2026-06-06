@@ -8,34 +8,20 @@
 
 let
   cfg = config.smi.users;
-
-  activeUsers =
-    let
-      byGroup = lib.filterAttrs (_: u: builtins.elem u.group cfg.activeGroups) userRegistry;
-      extraByName = lib.genAttrs cfg.extraUsers (name: userRegistry.${name});
-    in
-    byGroup // extraByName;
-
 in
 {
   options.smi.users = {
-    activeGroups = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ "personal" ];
-      description = "User groups active on this host";
-    };
-
-    extraUsers = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      description = "Extra users from the registry, activated regardless of group";
-    };
-
     defaultShell = lib.mkOption {
       type = lib.types.shellPackage;
       default = pkgs.fish;
       defaultText = lib.literalExpression "pkgs.fish";
       description = "Default shell for all managed users";
+    };
+
+    stateVersion = lib.mkOption {
+      type = lib.types.str;
+      default = "26.05";
+      description = "Home Manager state version for all managed users";
     };
   };
 
@@ -51,18 +37,17 @@ in
       ]
       ++ lib.optional (user.permissionType == "admin") "wheel"
       ++ lib.optional config.smi.services.docker.enable "docker";
-    }) activeUsers;
+    }) userRegistry;
 
     home-manager.users = lib.mapAttrs (name: user: {
-      imports =
-        lib.optional (user ? hmConfig) user.hmConfig ++ lib.optional (user ? groupModule) user.groupModule;
+      imports = lib.optional (user ? hmConfig) user.hmConfig;
 
       home = {
         username = name;
         homeDirectory = "/home/${name}";
-        stateVersion = "26.05";
+        stateVersion = cfg.stateVersion;
         packages = (user.packages or (_: [ ])) pkgs;
       };
-    }) activeUsers;
+    }) userRegistry;
   };
 }
