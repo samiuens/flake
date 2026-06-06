@@ -11,15 +11,13 @@
 
   config = lib.mkIf (config.smi.desktop.enable && config.smi.desktop.environment == "hyprland") {
     programs.hyprland.enable = true;
-
-    security.pam.services.hyprlock = { };
     security.polkit.enable = true;
     documentation.nixos.enable = false;
 
     services = {
       gvfs.enable = true;
       udisks2.enable = true;
-      displayManager.gdm.enable = true;
+      displayManager.sddm.enable = true;
     };
 
     xdg.portal = {

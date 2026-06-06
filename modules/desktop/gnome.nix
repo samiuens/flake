@@ -6,10 +6,9 @@
 }:
 {
   config = lib.mkIf (config.smi.desktop.enable && config.smi.desktop.environment == "gnome") {
-    services.desktopManager.gnome.enable = true;
-    services.displayManager.gdm = {
-      enable = true;
-      wayland = true;
+    services = {
+      desktopManager.gnome.enable = true;
+      displayManager.gdm.enable = true;
     };
 
     programs.dconf.enable = true;
@@ -17,6 +16,7 @@
       systemPackages = with pkgs; [
         dconf-editor
       ];
+
       gnome.excludePackages = with pkgs; [
         gnome-photos
         gnome-music
