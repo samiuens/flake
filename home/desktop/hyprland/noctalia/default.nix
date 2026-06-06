@@ -37,34 +37,34 @@ in
       user-templates.templates = {
         hyprland = {
           input_path = "${inputs.noctalia}/Assets/Templates/hyprland.conf";
-          output_path = "${config.home.homeDirectory}/.config/hypr/noctalia-colors.conf";
+          output_path = "${config.xdg.configHome}/hypr/noctalia-colors.conf";
           post_hook = "hyprctl reload && ${syncColorScheme}";
         };
         gtk3 = {
           input_path = "${inputs.noctalia}/Assets/Templates/gtk3.css";
-          output_path = "${config.home.homeDirectory}/.config/gtk-3.0/gtk.css";
+          output_path = "${config.xdg.configHome}/gtk-3.0/gtk.css";
         };
         gtk4 = {
           input_path = "${inputs.noctalia}/Assets/Templates/gtk4.css";
-          output_path = "${config.home.homeDirectory}/.config/gtk-4.0/gtk.css";
+          output_path = "${config.xdg.configHome}/gtk-4.0/gtk.css";
         };
         qt6ct = {
           input_path = "${inputs.noctalia}/Assets/Templates/qtct.conf";
-          output_path = "${config.home.homeDirectory}/.config/qt6ct/colors/noctalia.conf";
+          output_path = "${config.xdg.configHome}/qt6ct/colors/noctalia.conf";
         };
         ghostty = {
           input_path = "${inputs.noctalia}/Assets/Templates/terminal/ghostty";
-          output_path = "${config.home.homeDirectory}/.config/ghostty/noctalia-colors";
+          output_path = "${config.xdg.configHome}/ghostty/noctalia-colors";
           post_hook = "pkill -SIGUSR2 -x ghostty || true";
         };
         tmux = {
           input_path = "${./templates/tmux.conf}";
-          output_path = "${config.home.homeDirectory}/.config/tmux/noctalia-colors.conf";
-          post_hook = "tmux source-file ${config.home.homeDirectory}/.config/tmux/noctalia-colors.conf 2>/dev/null || true";
+          output_path = "${config.xdg.configHome}/tmux/noctalia-colors.conf";
+          post_hook = "tmux source-file ${config.xdg.configHome}/tmux/noctalia-colors.conf 2>/dev/null || true";
         };
         zed = {
           input_path = "${./templates/zed.json}";
-          output_path = "${config.home.homeDirectory}/.config/zed/themes/noctalia.json";
+          output_path = "${config.xdg.configHome}/zed/themes/noctalia.json";
         };
         /*
           zen = {
@@ -84,7 +84,7 @@ in
       "widget.use-xdg-desktop-portal.appearance" = lib.mkDefault 1;
       "layout.css.prefers-color-scheme.content-override" = lib.mkDefault 2;
     };
-    ghostty.settings.config-file = "?${config.home.homeDirectory}/.config/ghostty/noctalia-colors";
+    ghostty.settings.config-file = "?${config.xdg.configHome}/ghostty/noctalia-colors";
     tmux.extraConfig = lib.mkAfter ''
       source-file -q ~/.config/tmux/noctalia-colors.conf
     '';
@@ -99,7 +99,7 @@ in
     text = ''
       [Appearance]
       custom_palette=true
-      color_scheme_path=${config.home.homeDirectory}/.config/qt6ct/colors/noctalia.conf
+      color_scheme_path=${config.xdg.configHome}/qt6ct/colors/noctalia.conf
       icon_theme=Adwaita
       standard_dialogs=default
       style=Fusion
