@@ -11,6 +11,20 @@ let
     && config.smi.desktop.environment == "hyprland"
     && config.smi.desktop.shell == "dms";
   system = pkgs.stdenv.hostPlatform.system;
+  kb = config.smi.keyboard;
+
+  greeterCompositorConfig = ''
+    hl.config({
+      input = {
+        kb_layout = "${kb.layout}",
+        kb_variant = "${kb.variant}",
+      },
+    })
+
+    hl.env("XCURSOR_THEME", "Adwaita")
+    hl.env("XCURSOR_SIZE", "24")
+    hl.env("XCURSOR_PATH", "${pkgs.adwaita-icon-theme}/share/icons")
+  '';
 in
 {
   imports = [
@@ -21,6 +35,7 @@ in
     programs.dank-material-shell.greeter = {
       enable = true;
       compositor.name = "hyprland";
+      compositor.customConfig = greeterCompositorConfig;
       package = inputs.dms.packages.${system}.dms-shell;
       quickshell.package = pkgs.quickshell;
       configHome = config.smi.desktop.dms.greeter.configHome;
