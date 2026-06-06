@@ -13,15 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Browser Flake(s)
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-        home-manager.follows = "home-manager";
-      };
-    };
-
     # Utils
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
