@@ -36,6 +36,9 @@ in
       tmux.extraConfig = lib.mkAfter ''
         source-file -q ~/.config/tmux/dank-colors.conf
       '';
+
+      ghostty.settings.theme = "dankcolors";
+      zed-editor.userSettings.theme = lib.mkForce "DankShell Dark";
     };
   };
 }
