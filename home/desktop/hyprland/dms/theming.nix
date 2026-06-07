@@ -32,6 +32,9 @@ in
         package = pkgs.adwaita-icon-theme;
       };
     };
+    xdg.configFile."gtk-4.0/gtk.css".text = ''
+      @import url("dank-colors.css");
+    '';
     home.file.".icons/default/index.theme".text = ''
       [Icon Theme]
       Inherits=Adwaita
