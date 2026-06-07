@@ -18,10 +18,6 @@ in
       userSettings."workbench.colorTheme" = lib.mkDefault "Dynamic Base16 DankShell";
     };
 
-    # matugen-User-Template: tmux wird von DMS nicht nativ abgedeckt.
-    # Input (Template + .toml) darf ein read-only Store-Symlink sein – matugen
-    # liest nur. Der Output (dank-colors.conf) liegt bewusst NICHT in
-    # home-manager, damit matugen ihn zur Laufzeit schreiben kann.
     xdg.configFile = {
       "matugen/dms/configs/tmux.toml".text = ''
         [templates.tmux]
