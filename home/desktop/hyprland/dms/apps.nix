@@ -2,6 +2,7 @@
   osConfig,
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -12,6 +13,11 @@ let
 in
 {
   config = lib.mkIf active {
+    smi.programs.vscodium = {
+      extensions = pkgs.nix4vscode.forOpenVsx [ "DankLinux.dms-theme" ];
+      userSettings."workbench.colorTheme" = lib.mkDefault "Dynamic Base16 DankShell";
+    };
+
     # matugen-User-Template: tmux wird von DMS nicht nativ abgedeckt.
     # Input (Template + .toml) darf ein read-only Store-Symlink sein – matugen
     # liest nur. Der Output (dank-colors.conf) liegt bewusst NICHT in
