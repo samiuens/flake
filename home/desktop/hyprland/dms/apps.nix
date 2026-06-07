@@ -38,7 +38,11 @@ in
       '';
 
       ghostty.settings.theme = "dankcolors";
-      zed-editor.userSettings.theme = lib.mkForce "DankShell Dark";
+      zed-editor.userSettings.theme = lib.mkForce {
+        mode = "system";
+        light = "DankShell Light";
+        dark = "DankShell Dark";
+      };
     };
   };
 }
