@@ -16,6 +16,7 @@ in
     inputs.dms.homeModules.default
     ./shell.nix
     ./theming.nix
+    ./apps.nix
     ./keybinds.nix
     ./search.nix
   ];
