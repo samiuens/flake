@@ -12,9 +12,6 @@ let
 in
 {
   config = lib.mkIf active {
-    services.upower.enable = true;
-    services.power-profiles-daemon.enable = true;
-
     environment.systemPackages = with pkgs; [
       adwaita-icon-theme
       fastfetch
@@ -39,8 +36,5 @@ in
       glib
       gsettings-desktop-schemas
     ];
-    programs.dconf.enable = true;
-    hardware.i2c.enable = true;
-    environment.sessionVariables.QT_QPA_PLATFORMTHEME = "qt6ct";
   };
 }

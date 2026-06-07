@@ -9,16 +9,16 @@ let
   active =
     osConfig.smi.desktop.enable
     && osConfig.smi.desktop.environment == "hyprland"
-    && osConfig.smi.desktop.shell == "noctalia";
+    && osConfig.smi.desktop.shell == "dms";
 in
 {
   imports = [
-    inputs.noctalia.homeModules.default
+    inputs.dms.homeModules.default
     ./shell.nix
     ./theming.nix
     ./apps.nix
     ./keybinds.nix
-    ./settings
+    ./search.nix
   ];
 
   home.packages = lib.mkIf active [ pkgs.xdg-desktop-portal-gtk ];

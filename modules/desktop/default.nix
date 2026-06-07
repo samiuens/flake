@@ -18,6 +18,7 @@
       type = lib.types.enum [
         "default"
         "noctalia"
+        "dms"
       ];
       default = "default";
       description = "Hyprland shell variant; only applies when environment = \"hyprland\"";
