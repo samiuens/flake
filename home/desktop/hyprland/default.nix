@@ -76,6 +76,17 @@ in
           },
         })
 
+        ${lib.optionalString dmsActive ''
+          do
+            local ok, c = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/dms/colors.lua")
+            if ok and type(c) == "table" then
+              hl.config({ general = { col = {
+                active_border   = c.active,
+                inactive_border = c.inactive,
+              } } })
+            end
+          end''}
+
         -- Animations
         hl.curve("smooth", { type = "bezier", points = { { 0.05, 0.9 }, { 0.1, 1.05 } } })
         hl.animation({ leaf = "windows",    enabled = true, speed = 6, bezier = "smooth",  style = "slide" })

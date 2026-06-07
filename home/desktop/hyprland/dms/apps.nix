@@ -23,6 +23,13 @@ in
         output_path = '${config.xdg.configHome}/tmux/dank-colors.conf'
         post_hook = 'tmux source-file ${config.xdg.configHome}/tmux/dank-colors.conf 2>/dev/null || true'
       '';
+
+      "matugen/dms/configs/hypr-lua.toml".text = ''
+        [templates.hyprlua]
+        input_path = '${./templates/hypr-colors.lua}'
+        output_path = '${config.xdg.configHome}/hypr/dms/colors.lua'
+        post_hook = 'hyprctl reload'
+      '';
     };
 
     programs = {
