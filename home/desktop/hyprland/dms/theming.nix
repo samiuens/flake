@@ -1,5 +1,6 @@
 {
   osConfig,
+  config,
   lib,
   pkgs,
   ...
@@ -14,6 +15,8 @@ in
   config = lib.mkIf active {
     xdg.configFile."qt6ct/qt6ct.conf".text = ''
       [Appearance]
+      custom_palette=true
+      color_scheme_path=${config.xdg.configHome}/qt6ct/colors/matugen.conf
       icon_theme=Adwaita
       standard_dialogs=default
       style=Fusion
