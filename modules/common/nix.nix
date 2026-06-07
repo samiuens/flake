@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  inputs,
+  ...
+}:
 let
   cfg = config.smi.nix;
 in
@@ -55,6 +60,7 @@ in
     programs.nix-ld.enable = lib.mkDefault cfg.nixLd.enable;
 
     nixpkgs.config.allowUnfree = lib.mkDefault cfg.allowUnfree;
+    nixpkgs.overlays = [ inputs.nix4vscode.overlays.default ];
 
     nix = {
       settings = {
