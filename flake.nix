@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,6 +65,7 @@
 
       helpers = import ./lib { inherit (nixpkgs) lib; };
       nixosModule = import ./modules;
+      darwinModule = import ./darwin;
 
       mkHost =
         {
@@ -86,6 +91,30 @@
           ];
         };
 
+      mkDarwinHost =
+        {
+          inputs,
+          self,
+          userRegistry,
+          system ? "aarch64-darwin",
+        }:
+        hostsDir: hostname:
+        inputs.nix-darwin.lib.darwinSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              inputs
+              self
+              helpers
+              userRegistry
+              ;
+          };
+          modules = [
+            darwinModule
+            (hostsDir + "/${hostname}")
+          ];
+        };
+
       pre-commit-checkFor = forAllSystems (
         system:
         git-hooks.lib.${system}.run {
@@ -101,9 +130,10 @@
     in
     {
       nixosModules.default = nixosModule;
+      darwinModules.default = darwinModule;
       homeManagerModules.default = import ./home;
       lib = helpers // {
-        inherit mkHost;
+        inherit mkHost mkDarwinHost;
       };
 
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt);
