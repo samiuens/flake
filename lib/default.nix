@@ -1,5 +1,5 @@
 { lib }:
-{
+rec {
   importDir =
     dir:
     let
@@ -22,6 +22,28 @@
         );
     in
     go dir true;
+
+  importPlatformDir =
+    platform: dir:
+    let
+      load =
+        path:
+        let
+          raw = import path;
+        in
+        if lib.isAttrs raw && raw ? platforms && raw ? module then
+          {
+            keep = lib.elem platform raw.platforms;
+            module = raw.module;
+          }
+        else
+          {
+            keep = true;
+            module = raw;
+          };
+      loaded = map load (importDir dir);
+    in
+    map (x: x.module) (lib.filter (x: x.keep) loaded);
 
   mkSimpleProgram =
     {
