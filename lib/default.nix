@@ -51,10 +51,11 @@ rec {
       lib,
       name,
       packages,
+      condition ? true,
     }:
     {
       options.smi.programs.${name}.enable = lib.mkEnableOption name;
-      config = lib.mkIf config.smi.programs.${name}.enable {
+      config = lib.mkIf (config.smi.programs.${name}.enable && condition) {
         home.packages = packages;
       };
     };
