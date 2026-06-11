@@ -9,7 +9,10 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { inherit inputs helpers; };
+    extraSpecialArgs = {
+      inherit inputs helpers;
+      platform = "linux";
+    };
     backupFileExtension = ".bak";
     sharedModules = [
       (import ../../home)
