@@ -64,9 +64,9 @@
       pkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
 
       helpers = import ./lib { inherit (nixpkgs) lib; };
-      commonModule = import ./common;
-      nixosModule = import ./modules;
-      darwinModule = import ./darwin;
+      commonModule = import ./modules/common;
+      nixosModule = import ./modules/nixos;
+      darwinModule = import ./modules/darwin;
 
       mkHost =
         {

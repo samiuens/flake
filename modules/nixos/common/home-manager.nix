@@ -15,7 +15,7 @@
     };
     backupFileExtension = ".bak";
     sharedModules = [
-      (import ../../home)
+      (import ../../../home)
       inputs.nix-index-database.homeModules.default
       inputs.nix-flatpak.homeManagerModules.nix-flatpak
     ];
