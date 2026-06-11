@@ -64,6 +64,7 @@
       pkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
 
       helpers = import ./lib { inherit (nixpkgs) lib; };
+      commonModule = import ./common;
       nixosModule = import ./modules;
       darwinModule = import ./darwin;
 
@@ -86,6 +87,7 @@
               ;
           };
           modules = [
+            commonModule
             nixosModule
             (hostsDir + "/${hostname}")
           ];
@@ -110,6 +112,7 @@
               ;
           };
           modules = [
+            commonModule
             darwinModule
             (hostsDir + "/${hostname}")
           ];
@@ -129,8 +132,18 @@
       );
     in
     {
-      nixosModules.default = nixosModule;
-      darwinModules.default = darwinModule;
+      nixosModules.default = {
+        imports = [
+          commonModule
+          nixosModule
+        ];
+      };
+      darwinModules.default = {
+        imports = [
+          commonModule
+          darwinModule
+        ];
+      };
       homeManagerModules.default = import ./home;
       lib = helpers // {
         inherit mkHost mkDarwinHost;
