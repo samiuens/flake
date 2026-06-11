@@ -1,4 +1,4 @@
-{ helpers, ... }:
+{ helpers, platform, ... }:
 {
-  imports = helpers.importDir ./.;
+  imports = helpers.importPlatformDir platform ./.;
 }
