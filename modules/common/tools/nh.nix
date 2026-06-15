@@ -4,7 +4,7 @@ let
 in
 {
   options.smi.nh = {
-    enable = lib.mkEnableOption "nh, a quality-of-life wrapper for nixos-rebuild, home-manager, and GC";
+    enable = lib.mkEnableOption "Enable nh wrapper";
 
     flakeDir = lib.mkOption {
       type = lib.types.str;
