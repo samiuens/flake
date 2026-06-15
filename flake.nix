@@ -73,6 +73,7 @@
           inputs,
           self,
           userRegistry,
+          extraModules ? [ ],
           system ? "x86_64-linux",
         }:
         hostsDir: hostname:
@@ -90,7 +91,8 @@
             commonModule
             nixosModule
             (hostsDir + "/${hostname}")
-          ];
+          ]
+          ++ extraModules;
         };
 
       mkDarwinHost =
@@ -98,6 +100,7 @@
           inputs,
           self,
           userRegistry,
+          extraModules ? [ ],
           system ? "aarch64-darwin",
         }:
         hostsDir: hostname:
@@ -115,7 +118,8 @@
             commonModule
             darwinModule
             (hostsDir + "/${hostname}")
-          ];
+          ]
+          ++ extraModules;
         };
 
       pre-commit-checkFor = forAllSystems (
