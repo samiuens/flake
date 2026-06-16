@@ -1,5 +1,6 @@
 .direnv/
 result/
+.pre-commit-config.yaml
 
 # AI Files
 .claude/
