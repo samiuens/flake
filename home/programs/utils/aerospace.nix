@@ -14,7 +14,7 @@ in
     enable = lib.mkEnableOption name;
 
     settings = lib.mkOption {
-      type = tomlFormat.type;
+      inherit (tomlFormat) type;
       default = { };
       description = "AeroSpace settings written to ~/.aerospace.toml";
     };

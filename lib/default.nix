@@ -34,7 +34,7 @@ rec {
         if lib.isAttrs raw && raw ? platforms && raw ? module then
           {
             keep = lib.elem platform raw.platforms;
-            module = raw.module;
+            inherit (raw) module;
           }
         else
           {
