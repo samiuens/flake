@@ -6,7 +6,7 @@
 }:
 (import ../../../lib { inherit lib; }).mkSimpleProgram {
   inherit config lib;
-  name = "chromium";
-  packages = [ pkgs.ungoogled-chromium ];
-  condition = pkgs.stdenv.isLinux;
+  name = "raycast";
+  packages = [ pkgs.raycast ];
+  condition = pkgs.stdenv.isDarwin;
 }

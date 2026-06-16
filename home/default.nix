@@ -1,10 +1,4 @@
+{ helpers, platform, ... }:
 {
-  imports = [
-    ./common
-    ./programs
-    ./services
-    ./desktop
-    ./desktop/gnome
-    ./desktop/hyprland
-  ];
+  imports = helpers.importPlatformDir platform ./.;
 }

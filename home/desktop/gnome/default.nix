@@ -3,6 +3,7 @@
   config,
   osConfig,
   helpers,
+  platform,
   ...
 }:
 let
@@ -10,7 +11,7 @@ let
   gnomeActive = osConfig.smi.desktop.enable && osConfig.smi.desktop.environment == "gnome";
 in
 {
-  imports = helpers.importDir ./.;
+  imports = helpers.importPlatformDir platform ./.;
 
   options.smi.desktop.accentColor = lib.mkOption {
     type = lib.types.enum [

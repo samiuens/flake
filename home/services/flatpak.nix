@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -22,7 +23,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf pkgs.stdenv.isLinux {
     services.flatpak.packages = cfg.packages;
   };
 }

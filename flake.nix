@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,13 +64,16 @@
       pkgsFor = forAllSystems (system: nixpkgs.legacyPackages.${system});
 
       helpers = import ./lib { inherit (nixpkgs) lib; };
-      nixosModule = import ./modules;
+      commonModule = import ./modules/common;
+      nixosModule = import ./modules/nixos;
+      darwinModule = import ./modules/darwin;
 
       mkHost =
         {
           inputs,
           self,
           userRegistry,
+          extraModules ? [ ],
           system ? "x86_64-linux",
         }:
         hostsDir: hostname:
@@ -81,9 +88,38 @@
               ;
           };
           modules = [
+            commonModule
             nixosModule
             (hostsDir + "/${hostname}")
-          ];
+          ]
+          ++ extraModules;
+        };
+
+      mkDarwinHost =
+        {
+          inputs,
+          self,
+          userRegistry,
+          extraModules ? [ ],
+          system ? "aarch64-darwin",
+        }:
+        hostsDir: hostname:
+        inputs.nix-darwin.lib.darwinSystem {
+          inherit system;
+          specialArgs = {
+            inherit
+              inputs
+              self
+              helpers
+              userRegistry
+              ;
+          };
+          modules = [
+            commonModule
+            darwinModule
+            (hostsDir + "/${hostname}")
+          ]
+          ++ extraModules;
         };
 
       pre-commit-checkFor = forAllSystems (
@@ -100,10 +136,21 @@
       );
     in
     {
-      nixosModules.default = nixosModule;
+      nixosModules.default = {
+        imports = [
+          commonModule
+          nixosModule
+        ];
+      };
+      darwinModules.default = {
+        imports = [
+          commonModule
+          darwinModule
+        ];
+      };
       homeManagerModules.default = import ./home;
       lib = helpers // {
-        inherit mkHost;
+        inherit mkHost mkDarwinHost;
       };
 
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt);
