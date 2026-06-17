@@ -29,7 +29,7 @@ in
 
     tmux.accentColor = lib.mkOption {
       type = lib.types.str;
-      default = "green";
+      default = "blue";
       description = "Tmux status bar and border accent color";
     };
   };
