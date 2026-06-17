@@ -4,3 +4,6 @@ result/
 
 # AI Files
 .claude/
+
+# macOS Files
+.DS_Store
