@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   name = "ghostty";
   cfg = config.smi.programs.${name};
@@ -25,9 +30,14 @@ in
       enable = true;
       enableFishIntegration = true;
 
+      # Auf Darwin kommt das Package vom Homebrew-Cask (pkgs.ghostty baut dort
+      # nicht). home-manager verwaltet nur die Config unter ~/.config/ghostty.
+      package = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin null;
+
       settings = {
         font-family = cfg.fontFamily;
         font-size = cfg.fontSize;
+        command = "${pkgs.fish}/bin/fish --login";
         window-decoration = "auto";
         cursor-style = "block";
         cursor-style-blink = false;
