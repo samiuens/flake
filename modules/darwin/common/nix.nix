@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  inputs,
   ...
 }:
 let
@@ -41,6 +42,7 @@ in
 
   config = {
     nixpkgs.config.allowUnfree = lib.mkDefault cfg.allowUnfree;
+    nixpkgs.overlays = [ inputs.nix4vscode.overlays.default ];
 
     # Determinate Nix manages the Nix installation itself, so nix-darwin must
     # not manage nix.conf or the gc launchd job. The settings/gc below only
