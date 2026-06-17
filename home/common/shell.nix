@@ -83,6 +83,7 @@ in
 
       tmux = lib.mkIf cfg.tmux.enable {
         enable = true;
+        shell = "${pkgs.fish}/bin/fish";
         mouse = true;
         prefix = "C-b";
         terminal = "tmux-256color";
@@ -100,6 +101,11 @@ in
         ];
 
         extraConfig = ''
+          # tmux-sensible setzt auf macOS default-command auf "reattach-to-user-namespace -l $SHELL"
+          # (= /bin/zsh, die OS-Login-Shell) und überschreibt damit default-shell. Da extraConfig
+          # nach den Plugins geladen wird, erzwingen wir hier Fish als interaktive Shell.
+          set -g default-command "${pkgs.fish}/bin/fish -l"
+
           setw -g pane-base-index 1
 
           bind c new-window -c "#{pane_current_path}"
