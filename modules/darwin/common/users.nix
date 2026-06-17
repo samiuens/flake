@@ -7,6 +7,9 @@
 }:
 let
   cfg = config.smi.users;
+  adminUsers = lib.filter (
+    name: (userRegistry.${name}.permissionType or null) == "admin"
+  ) (lib.attrNames userRegistry);
 in
 {
   options.smi.users = {
@@ -25,6 +28,10 @@ in
   };
 
   config = {
+    # nix-darwin requires a primary user for user-scoped activation; use the
+    # admin from the user registry (mirrors the nixos wheel-group logic).
+    system.primaryUser = lib.mkIf (adminUsers != [ ]) (lib.mkDefault (lib.head adminUsers));
+
     users.users = lib.mapAttrs (name: user: {
       home = "/Users/${name}";
       shell = cfg.defaultShell;
