@@ -3,7 +3,7 @@ _: {
     enable = true;
     enableDefaultConfig = false;
     matchBlocks."*" = {
-      addKeysToAgent = "confirm";
+      addKeysToAgent = "yes";
       serverAliveInterval = 60;
       serverAliveCountMax = 3;
     };
