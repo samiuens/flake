@@ -16,12 +16,13 @@ in
     settings = lib.mkOption {
       inherit (tomlFormat) type;
       default = { };
-      description = "AeroSpace settings written to ~/.aerospace.toml";
+      description = "AeroSpace settings written to ~/.config/aerospace/aerospace.toml";
     };
   };
 
   config = lib.mkIf (cfg.enable && pkgs.stdenv.isDarwin) {
     home.packages = [ pkgs.aerospace ];
-    home.file.".aerospace.toml".source = tomlFormat.generate "aerospace.toml" cfg.settings;
+    xdg.configFile."aerospace/aerospace.toml".source =
+      tomlFormat.generate "aerospace.toml" cfg.settings;
   };
 }
