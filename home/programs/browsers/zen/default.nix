@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  pkgs,
+  platform,
   inputs,
   ...
 }:
@@ -17,7 +17,7 @@ in
     ./containers.nix
     ./spaces.nix
   ]
-  ++ lib.optionals pkgs.stdenv.isLinux [ ./xdg.nix ];
+  ++ lib.optionals (platform == "linux") [ ./xdg.nix ];
 
   options.smi.programs.${name}.enable = lib.mkEnableOption name;
 
