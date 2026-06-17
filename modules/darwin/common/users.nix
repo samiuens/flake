@@ -7,9 +7,9 @@
 }:
 let
   cfg = config.smi.users;
-  adminUsers = lib.filter (
-    name: (userRegistry.${name}.permissionType or null) == "admin"
-  ) (lib.attrNames userRegistry);
+  adminUsers = lib.filter (name: (userRegistry.${name}.permissionType or null) == "admin") (
+    lib.attrNames userRegistry
+  );
 in
 {
   options.smi.users = {
