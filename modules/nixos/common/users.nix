@@ -23,31 +23,41 @@ in
       default = "26.05";
       description = "Home Manager state version for all managed users";
     };
+
+    extraUsers = lib.mkOption {
+      type = lib.types.raw;
+      default = { };
+      description = "Additional user definitions merged with the host's userRegistry";
+    };
   };
 
-  config = {
-    users.users = lib.mapAttrs (_name: user: {
-      isNormalUser = true;
-      shell = cfg.defaultShell;
-      inherit (user) description;
-      extraGroups = [
-        "networkmanager"
-        "audio"
-        "video"
-      ]
-      ++ lib.optional (user.permissionType == "admin") "wheel"
-      ++ lib.optional config.smi.services.docker.enable "docker";
-    }) userRegistry;
+  config =
+    let
+      allUsers = userRegistry // cfg.extraUsers;
+    in
+    {
+      users.users = lib.mapAttrs (_name: user: {
+        isNormalUser = true;
+        shell = cfg.defaultShell;
+        inherit (user) description;
+        extraGroups = [
+          "networkmanager"
+          "audio"
+          "video"
+        ]
+        ++ lib.optional (user.permissionType == "admin") "wheel"
+        ++ lib.optional config.smi.services.docker.enable "docker";
+      }) allUsers;
 
-    home-manager.users = lib.mapAttrs (name: user: {
-      imports = lib.optional (user ? hmConfig) user.hmConfig;
+      home-manager.users = lib.mapAttrs (name: user: {
+        imports = lib.optional (user ? hmConfig) user.hmConfig;
 
-      home = {
-        username = name;
-        homeDirectory = "/home/${name}";
-        inherit (cfg) stateVersion;
-        packages = (user.packages or (_: [ ])) pkgs;
-      };
-    }) userRegistry;
-  };
+        home = {
+          username = name;
+          homeDirectory = "/home/${name}";
+          inherit (cfg) stateVersion;
+          packages = (user.packages or (_: [ ])) pkgs;
+        };
+      }) allUsers;
+    };
 }
