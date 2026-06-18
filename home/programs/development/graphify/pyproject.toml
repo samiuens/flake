@@ -1,0 +1,13 @@
+[project]
+name = "graphify-tool"
+version = "0.0.0"
+description = "Nix wrapper workspace that pins the graphifyy CLI via uv2nix"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "graphifyy[anthropic,mcp]",
+]
+
+[tool.uv]
+# Virtual root: this workspace only aggregates graphifyy as a dependency,
+# it is not itself an installable package.
+package = false
