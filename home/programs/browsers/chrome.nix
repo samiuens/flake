@@ -1,4 +1,8 @@
 {
+  platforms = [
+    "linux"
+    "darwin"
+  ];
   module =
     {
       config,
