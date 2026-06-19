@@ -43,7 +43,7 @@ in
         # Titelleiste verschmilzt mit dem Fensterhintergrund (Glas); die
         # Ampel-Buttons bleiben, native Tabs/Titel-Text entfallen optisch.
         # Fenster/Tabs verwaltet ohnehin tmux.
-        macos-titlebar-style = "transparent";
+        macos-titlebar-style = "hidden";
 
         cursor-style = "block";
         cursor-style-blink = false;
@@ -85,8 +85,8 @@ in
 
         # Comfortable Spacing: mehr Rand ums Terminal und etwas Luft zwischen
         # den Zeilen.
-        window-padding-x = 14;
-        window-padding-y = 12;
+        window-padding-x = 15;
+        window-padding-y = 15;
         window-padding-balance = true;
         adjust-cell-height = "12%";
 
