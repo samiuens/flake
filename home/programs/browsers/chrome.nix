@@ -1,5 +1,4 @@
 {
-  platforms = [ "linux" ];
   module =
     {
       config,

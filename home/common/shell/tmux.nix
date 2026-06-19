@@ -49,6 +49,33 @@ let
     postInstall = "patchShebangs $out";
   };
 
+  # Benennt Fenster anhand des laufenden Programms via `ps` (echtes argv) statt
+  # tmux' pane_current_command. Dadurch erscheint z.B. `claude` statt des
+  # Nix-Wrapper-Namens `.claude-wrapped`. Braucht Python 3 mit libtmux.
+  windowNamePlugin =
+    let
+      py = pkgs.python3.withPackages (ps: [ ps.libtmux ]);
+    in
+    pkgs.tmuxPlugins.mkTmuxPlugin {
+      pluginName = "tmux-window-name";
+      rtpFilePath = "tmux_window_name.tmux";
+      version = "unstable-2025-06-19";
+      src = pkgs.fetchFromGitHub {
+        owner = "ofirgall";
+        repo = "tmux-window-name";
+        rev = "e98189f9a9487d2cdaa2d207b06780d1f5f58a41";
+        hash = "sha256-YI2s/OtywKJQAPpb07dCbWA/6+sWAl+DB+QQbvZOG5k=";
+      };
+      postInstall = ''
+        dir=$out/share/tmux-plugins/tmux-window-name
+        substituteInPlace $dir/scripts/rename_session_windows.py \
+          --replace-fail '#!/usr/bin/env python3' '#!${py}/bin/python3'
+        substituteInPlace $dir/tmux_window_name.tmux \
+          --replace-fail 'python -c' '${py}/bin/python -c'
+        patchShebangs $dir
+      '';
+    };
+
   tmuxPicker = pkgs.writeShellScript "tmux-session-picker" ''
     result="$(${pkgs.tmux}/bin/tmux list-sessions -F '#{session_name}' | ${pkgs.fzf}/bin/fzf \
       --ansi --reverse --no-sort --cycle \
@@ -95,12 +122,17 @@ in
       yank
       open
       smoothScrollPlugin
+      windowNamePlugin
     ];
 
     extraConfig = ''
       # tmux-sensible überschreibt default-shell auf macOS mit zsh; Fish danach
       # wieder erzwingen, da extraConfig nach den Plugins geladen wird.
-      set -g default-command "${pkgs.fish}/bin/fish -l"
+      # `exec` ersetzt den `$shell -c …`-Wrapper-Prozess durch Fish selbst, statt
+      # eine zweite Prozessebene zu erzeugen. Sonst ist das Vordergrundprogramm
+      # (z.B. claude) nur ein Enkel von pane_pid und tmux-window-name sieht es
+      # nicht – alle Fenster bekämen denselben Namen.
+      set -g default-command "exec ${pkgs.fish}/bin/fish -l"
 
       setw -g pane-base-index 1
 
@@ -142,7 +174,12 @@ in
       set -g status-left " #[fg=${tn.cyan},bold]#{pane_title}#[default]   "
       set -g status-left-length 200
 
-      set -g status-right "#(PATH=${pkgs.git}/bin:$PATH ${pkgs.gitmux}/bin/gitmux -cfg ${gitmuxConfig} '#{pane_current_path}') "
+      # Periodischer Trigger fürs Window-Naming: tmux wertet #()-Befehle bei
+      # jedem Status-Redraw (status-interval) neu aus. tmux-window-name benennt
+      # selbst nur per after-select-window-Hook um, daher hier mit-triggern,
+      # damit der Tab-Titel auch ohne Pane-Wechsel folgt. Das Script wirkt über
+      # libtmux per Seiteneffekt; Ausgabe verwerfen, damit der Status leer bleibt.
+      set -g status-right "#(PATH=${pkgs.git}/bin:$PATH ${pkgs.gitmux}/bin/gitmux -cfg ${gitmuxConfig} '#{pane_current_path}') #(${windowNamePlugin}/share/tmux-plugins/tmux-window-name/scripts/rename_session_windows.py >/dev/null 2>&1)"
       set -g status-right-length 200
 
       set -g pane-border-style fg=${tn.bgHl}
